@@ -43,4 +43,21 @@ app.post('/api/items', async (req, res) => {
   res.status(201).json(newItem);
 });
 
+app.put('/api/items/:id', async (req, res) => {
+  const { id } = req.params;
+  let items = await readData();
+  items = items.map(item => item.id === id ? { ...item, ...req.body } : item);
+  await writeData(items);
+  res.json({ message: 'Item updated' });
+});
+
+app.delete('/api/items/:id', async (req, res) => {
+  const { id } = req.params;
+  let items = await readData();
+  items = items.filter(item => item.id !== id);
+  await writeData(items);
+  res.status(204).send();
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Final sync check
