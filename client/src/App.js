@@ -7,7 +7,6 @@ function App() {
     name: '', price: '', link: '', buyer: '', category: 'Beauty'
   });
 
-  // THE BRAIN: This link must be exact
   const API_URL = '/.netlify/functions/server/api/items';
 
   useEffect(() => { fetchItems(); }, []);
@@ -16,7 +15,7 @@ function App() {
     try {
       const res = await axios.get(API_URL);
       setItems(Array.isArray(res.data) ? res.data : []);
-    } catch (err) { console.error("Fetch error:", err); }
+    } catch (err) { console.error("Database error:", err); }
   };
 
   const addItem = async () => {
@@ -25,64 +24,64 @@ function App() {
       await axios.post(API_URL, formData);
       setFormData({ name: '', price: '', link: '', buyer: '', category: 'Beauty' });
       fetchItems();
-    } catch (err) { alert("Save failed. Check your Netlify Logs."); }
+    } catch (err) { alert("Save failed. Make sure server.js is in netlify/functions/"); }
   };
 
   return (
-    <div style={{ backgroundColor: '#fffdf5', minHeight: '100vh', padding: '40px 20px', fontFamily: 'system-ui, sans-serif' }}>
+    <div style={{ backgroundColor: '#F5F5DC', minHeight: '100vh', padding: '60px 20px', fontFamily: "'Syne', sans-serif", color: '#1a1a1a' }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap');`}</style>
       
-      {/* TITLE SECTION */}
-      <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+      {/* HEADER SECTION */}
+      <div style={{ textAlign: 'center', marginBottom: '60px' }}>
         <h1 style={{ 
-          fontSize: 'clamp(3rem, 10vw, 6rem)', margin: 0, color: '#c8ffbf', 
-          WebkitTextStroke: '2px #1a1a1a', textShadow: '8px 8px 0px #f6b6cf',
-          fontWeight: '900', letterSpacing: '4px'
+          fontSize: '6rem', margin: 0, color: '#98FB98', textTransform: 'uppercase',
+          fontWeight: '800', textShadow: '8px 8px 0px #FFB6C1', letterSpacing: '-2px',
+          WebkitTextStroke: '2px #1a1a1a'
         }}>WISHLIST</h1>
-        <p style={{ color: '#f6b6cf', fontWeight: 'bold', letterSpacing: '2px', marginTop: '-10px' }}>
+        <p style={{ color: '#FFB6C1', letterSpacing: '6px', fontSize: '1rem', marginTop: '5px', fontWeight: '400', textTransform: 'uppercase' }}>
           VOL. 01 — SPECIAL EDITION CATALOG
         </p>
       </div>
 
-      {/* FORM CARD */}
-      <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto', marginBottom: '80px' }}>
-        <div style={{ position: 'absolute', top: '10px', left: '10px', width: '100%', height: '100%', backgroundColor: '#f6b6cf', border: '3px solid #1a1a1a' }}></div>
-        <div style={{ position: 'relative', backgroundColor: '#c8ffbf', border: '3px solid #1a1a1a', padding: '30px' }}>
-          <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', fontWeight: '900' }}>ADD NEW ENTRY:</h2>
+      {/* MAIN FORM CARD */}
+      <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
+        <div style={{ position: 'absolute', top: '12px', left: '12px', width: '100%', height: '100%', backgroundColor: '#FFB6C1', border: '3px solid #1a1a1a' }}></div>
+        <div style={{ position: 'relative', backgroundColor: '#98FB98', border: '3px solid #1a1a1a', padding: '40px' }}>
+          <h2 style={{ margin: '0 0 25px 0', fontSize: '1.4rem', fontWeight: '800', textTransform: 'uppercase' }}>ADD NEW ENTRY:</h2>
           
-          <div style={{ display: 'grid', gap: '15px' }}>
+          <div style={{ display: 'grid', gap: '20px' }}>
             <input style={inputStyle} placeholder="ITEM NAME" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-              <input style={inputStyle} placeholder="PRICE $" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
-              <input style={inputStyle} placeholder="WHERE TO BUY" value={formData.link} onChange={e => setFormData({...formData, link: e.target.value})} />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+               <input style={inputStyle} placeholder="PRICE $" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+               <input style={inputStyle} placeholder="WHERE TO BUY" value={formData.link} onChange={e => setFormData({...formData, link: e.target.value})} />
             </div>
             <input style={inputStyle} placeholder="WHO TO BUY WITH" value={formData.buyer} onChange={e => setFormData({...formData, buyer: e.target.value})} />
+            
             <select style={inputStyle} value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
-              <option value="Beauty">Beauty</option>
-              <option value="Shoes">Shoes</option>
-              <option value="Tops">Tops</option>
-              <option value="Bottoms">Bottoms</option>
-              <option value="Decor">Decor</option>
-              <option value="Shelf">Move to Shelf</option>
+              <option value="Beauty">BEAUTY</option>
+              <option value="Shelf">MOVE TO SHELF</option>
             </select>
-            <button onClick={addItem} style={{ backgroundColor: 'black', color: '#c8ffbf', border: 'none', padding: '20px', fontWeight: '900', cursor: 'pointer', fontSize: '1.1rem' }}>
-              APPEND TO CATALOG
-            </button>
+
+            <button onClick={addItem} style={{
+              backgroundColor: '#1a1a1a', color: '#98FB98', padding: '20px', 
+              border: 'none', fontWeight: '800', fontSize: '1.2rem', cursor: 'pointer', letterSpacing: '2px'
+            }}>APPEND TO CATALOG</button>
           </div>
         </div>
       </div>
 
-      {/* DISPLAY SECTION */}
-      <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px' }}>
+      {/* BOTTOM SECTIONS */}
+      <div style={{ maxWidth: '1000px', margin: '80px auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px' }}>
         <div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: '900', borderBottom: '10px solid #f6b6cf', marginBottom: '20px' }}>MY CART</h2>
+          <h2 style={{ fontSize: '3rem', fontWeight: '700', borderBottom: '12px solid #FFB6C1', letterSpacing: '4px', marginBottom: '30px' }}>MY CART</h2>
           {items.filter(i => i.category !== 'Shelf').map(item => (
-            <div key={item.id} style={{ fontSize: '1.2rem', padding: '10px 0', borderBottom: '2px solid #1a1a1a', fontWeight: 'bold' }}>{item.name.toUpperCase()}</div>
+            <div key={item.id} style={itemRowStyle}>— {item.name.toUpperCase()}</div>
           ))}
         </div>
         <div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: '900', borderBottom: '10px solid #c8ffbf', marginBottom: '20px' }}>MY SHELF</h2>
+          <h2 style={{ fontSize: '3rem', fontWeight: '700', borderBottom: '12px solid #98FB98', letterSpacing: '4px', marginBottom: '30px' }}>MY SHELF</h2>
           {items.filter(i => i.category === 'Shelf').map(item => (
-            <div key={item.id} style={{ fontSize: '1.2rem', padding: '10px 0', borderBottom: '2px solid #1a1a1a', fontWeight: 'bold' }}>{item.name.toUpperCase()}</div>
+            <div key={item.id} style={itemRowStyle}>— {item.name.toUpperCase()}</div>
           ))}
         </div>
       </div>
@@ -90,6 +89,7 @@ function App() {
   );
 }
 
-const inputStyle = { width: '100%', padding: '15px', border: '3px solid #1a1a1a', outline: 'none', boxSizing: 'border-box', fontWeight: 'bold' };
+const inputStyle = { backgroundColor: 'white', border: '3px solid #1a1a1a', padding: '15px', fontWeight: '700', outline: 'none', width: '100%', boxSizing: 'border-box' };
+const itemRowStyle = { fontSize: '1.2rem', padding: '12px 0', borderBottom: '2px solid #1a1a1a', fontWeight: '700', letterSpacing: '1px' };
 
 export default App;
