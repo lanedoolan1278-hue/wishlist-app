@@ -11,7 +11,7 @@ function App() {
     try {
       const res = await axios.get(API_URL);
       if (Array.isArray(res.data)) setItems(res.data);
-    } catch (err) { console.error("Cloud Brain offline"); }
+    } catch (err) { console.error("Cloud Brain Offline"); }
   };
 
   const addItem = async () => {
@@ -26,6 +26,7 @@ function App() {
   return (
     <div style={{ backgroundColor: '#fcf2e6', minHeight: '100vh', padding: '40px 20px', fontFamily: "'Syne', sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap');`}</style>
+      
       <div style={{ textAlign: 'center', marginBottom: '50px' }}>
         <h1 style={{ 
           fontSize: 'clamp(3rem, 10vw, 6rem)', color: '#b1f2ba', fontWeight: '800', 
@@ -34,7 +35,7 @@ function App() {
         }}>WISHLIST</h1>
         <p style={{ color: '#ffb6c1', letterSpacing: '4px', fontWeight: 'bold' }}>VOL. 01 — SPECIAL EDITION CATALOG</p>
       </div>
-      
+
       <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
         <div style={{ position: 'absolute', top: '10px', left: '10px', width: '100%', height: '100%', backgroundColor: '#ffb6c1', border: '3px solid #1a1a1a' }}></div>
         <div style={{ position: 'relative', backgroundColor: '#b1f2ba', border: '3px solid #1a1a1a', padding: '30px' }}>
@@ -51,21 +52,6 @@ function App() {
             </select>
             <button onClick={addItem} style={{ backgroundColor: 'black', color: '#b1f2ba', padding: '20px', fontWeight: '900', border: 'none', cursor: 'pointer' }}>APPEND TO CATALOG</button>
           </div>
-        </div>
-      </div>
-      
-      <div style={{ maxWidth: '1000px', margin: '60px auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px' }}>
-        <div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: '800', borderBottom: '10px solid #ffb6c1', marginBottom: '20px' }}>MY CART</h2>
-          {items.filter(i => i.category !== 'Shelf').map(item => (
-            <div key={item.id} style={{ fontSize: '1.2rem', padding: '10px 0', borderBottom: '2px solid #1a1a1a', fontWeight: 'bold' }}>{item.name.toUpperCase()}</div>
-          ))}
-        </div>
-        <div>
-          <h2 style={{ fontSize: '2.5rem', fontWeight: '800', borderBottom: '10px solid #b1f2ba', marginBottom: '20px' }}>MY SHELF</h2>
-          {items.filter(i => i.category === 'Shelf').map(item => (
-            <div key={item.id} style={{ fontSize: '1.2rem', padding: '10px 0', borderBottom: '2px solid #1a1a1a', fontWeight: 'bold' }}>{item.name.toUpperCase()}</div>
-          ))}
         </div>
       </div>
     </div>
