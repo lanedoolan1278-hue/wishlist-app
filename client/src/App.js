@@ -7,6 +7,7 @@ function App() {
     name: '', price: '', link: '', buyer: '', category: 'Beauty'
   });
 
+  // CRITICAL: This path matches the Netlify Function location
   const API_URL = '/.netlify/functions/server/api/items';
 
   useEffect(() => { fetchItems(); }, []);
@@ -14,8 +15,8 @@ function App() {
   const fetchItems = async () => {
     try {
       const res = await axios.get(API_URL);
-      setItems(Array.isArray(res.data) ? res.data : []);
-    } catch (err) { console.error("Database error:", err); }
+      if (Array.isArray(res.data)) setItems(res.data);
+    } catch (err) { console.error("Fetch failed:", err); }
   };
 
   const addItem = async () => {
@@ -24,29 +25,35 @@ function App() {
       await axios.post(API_URL, formData);
       setFormData({ name: '', price: '', link: '', buyer: '', category: 'Beauty' });
       fetchItems();
-    } catch (err) { alert("Save failed. Make sure server.js is in netlify/functions/"); }
+    } catch (err) {
+      alert("Save failed. The 'Brain' isn't responding.");
+    }
   };
 
   return (
-    <div style={{ backgroundColor: '#F5F5DC', minHeight: '100vh', padding: '60px 20px', fontFamily: "'Syne', sans-serif", color: '#1a1a1a' }}>
+    <div style={{ backgroundColor: '#fcf2e6', minHeight: '100vh', padding: '60px 20px', fontFamily: "'Syne', sans-serif", color: '#1a1a1a' }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap');`}</style>
       
       {/* HEADER SECTION */}
       <div style={{ textAlign: 'center', marginBottom: '60px' }}>
         <h1 style={{ 
-          fontSize: '6rem', margin: 0, color: '#98FB98', textTransform: 'uppercase',
-          fontWeight: '800', textShadow: '8px 8px 0px #FFB6C1', letterSpacing: '-2px',
-          WebkitTextStroke: '2px #1a1a1a'
+          fontSize: 'clamp(3rem, 10vw, 6rem)', margin: 0, color: '#b1f2ba', 
+          textTransform: 'uppercase', fontWeight: '800', 
+          textShadow: '6px 6px 0px #ffb6c1, 12px 12px 0px #1a1a1a', // PINK + BLACK DROP SHADOW
+          letterSpacing: '-2px', WebkitTextStroke: '2px #1a1a1a'
         }}>WISHLIST</h1>
-        <p style={{ color: '#FFB6C1', letterSpacing: '6px', fontSize: '1rem', marginTop: '5px', fontWeight: '400', textTransform: 'uppercase' }}>
+        <p style={{ color: '#ffb6c1', letterSpacing: '6px', fontSize: '1rem', marginTop: '10px', fontWeight: '400', textTransform: 'uppercase' }}>
           VOL. 01 — SPECIAL EDITION CATALOG
         </p>
       </div>
 
       {/* MAIN FORM CARD */}
       <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
-        <div style={{ position: 'absolute', top: '12px', left: '12px', width: '100%', height: '100%', backgroundColor: '#FFB6C1', border: '3px solid #1a1a1a' }}></div>
-        <div style={{ position: 'relative', backgroundColor: '#98FB98', border: '3px solid #1a1a1a', padding: '40px' }}>
+        {/* PINK OFFSET SHADOW */}
+        <div style={{ position: 'absolute', top: '12px', left: '12px', width: '100%', height: '100%', backgroundColor: '#ffb6c1', border: '3px solid #1a1a1a' }}></div>
+        
+        {/* MINT BOX WITH BLACK OUTLINE */}
+        <div style={{ position: 'relative', backgroundColor: '#b1f2ba', border: '3px solid #1a1a1a', padding: '40px' }}>
           <h2 style={{ margin: '0 0 25px 0', fontSize: '1.4rem', fontWeight: '800', textTransform: 'uppercase' }}>ADD NEW ENTRY:</h2>
           
           <div style={{ display: 'grid', gap: '20px' }}>
@@ -63,7 +70,7 @@ function App() {
             </select>
 
             <button onClick={addItem} style={{
-              backgroundColor: '#1a1a1a', color: '#98FB98', padding: '20px', 
+              backgroundColor: '#1a1a1a', color: '#b1f2ba', padding: '20px', 
               border: 'none', fontWeight: '800', fontSize: '1.2rem', cursor: 'pointer', letterSpacing: '2px'
             }}>APPEND TO CATALOG</button>
           </div>
@@ -73,13 +80,13 @@ function App() {
       {/* BOTTOM SECTIONS */}
       <div style={{ maxWidth: '1000px', margin: '80px auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px' }}>
         <div>
-          <h2 style={{ fontSize: '3rem', fontWeight: '700', borderBottom: '12px solid #FFB6C1', letterSpacing: '4px', marginBottom: '30px' }}>MY CART</h2>
+          <h2 style={{ fontSize: '3rem', fontWeight: '700', borderBottom: '12px solid #ffb6c1', letterSpacing: '4px', marginBottom: '30px' }}>MY CART</h2>
           {items.filter(i => i.category !== 'Shelf').map(item => (
             <div key={item.id} style={itemRowStyle}>— {item.name.toUpperCase()}</div>
           ))}
         </div>
         <div>
-          <h2 style={{ fontSize: '3rem', fontWeight: '700', borderBottom: '12px solid #98FB98', letterSpacing: '4px', marginBottom: '30px' }}>MY SHELF</h2>
+          <h2 style={{ fontSize: '3rem', fontWeight: '700', borderBottom: '12px solid #b1f2ba', letterSpacing: '4px', marginBottom: '30px' }}>MY SHELF</h2>
           {items.filter(i => i.category === 'Shelf').map(item => (
             <div key={item.id} style={itemRowStyle}>— {item.name.toUpperCase()}</div>
           ))}
@@ -89,7 +96,7 @@ function App() {
   );
 }
 
-const inputStyle = { backgroundColor: 'white', border: '3px solid #1a1a1a', padding: '15px', fontWeight: '700', outline: 'none', width: '100%', boxSizing: 'border-box' };
+const inputStyle = { backgroundColor: 'white', border: '3px solid #1a1a1a', padding: '15px', fontWeight: '700', fontFamily: 'Syne', outline: 'none', width: '100%', boxSizing: 'border-box' };
 const itemRowStyle = { fontSize: '1.2rem', padding: '12px 0', borderBottom: '2px solid #1a1a1a', fontWeight: '700', letterSpacing: '1px' };
 
 export default App;
