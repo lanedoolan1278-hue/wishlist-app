@@ -3,11 +3,9 @@ import axios from 'axios';
 
 function App() {
   const [items, setItems] = useState([]);
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState('MY CART');
-  const [price, setPrice] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [link, setLink] = useState('');
+  const [formData, setFormData] = useState({
+    name: '', price: '', link: '', buyer: '', category: 'Beauty'
+  });
 
   const API_URL = 'https://wishlist-catalog.netlify.app/.netlify/functions/server/api/items';
 
@@ -17,56 +15,86 @@ function App() {
     try {
       const res = await axios.get(API_URL);
       setItems(res.data);
-    } catch (err) { console.error("Error fetching:", err); }
+    } catch (err) { console.error("Database error:", err); }
   };
 
   const addItem = async () => {
-    if (!name) return;
-    const newItem = { name, category, price, imageUrl, link };
-    await axios.post(API_URL, newItem);
-    setName(''); setPrice(''); setImageUrl(''); setLink('');
+    if (!formData.name) return;
+    await axios.post(API_URL, formData);
+    setFormData({ name: '', price: '', link: '', buyer: '', category: 'Beauty' });
     fetchItems();
   };
 
   return (
-    <div style={{ backgroundColor: '#fdf0f5', minHeight: '100vh', padding: '20px', fontFamily: '"Times New Roman", serif' }}>
-      <header style={{ textAlign: 'center', borderBottom: '2px solid #4a7c59', marginBottom: '40px' }}>
-        <h1 style={{ color: '#4a7c59', fontSize: '3rem', margin: '10px 0', letterSpacing: '4px' }}>WISHLIST CATALOG</h1>
-        <p style={{ color: '#4a7c59', fontStyle: 'italic' }}>SPECIAL EDITION / SPRING 2026</p>
-      </header>
+    <div style={{ backgroundColor: '#fdfdfd', minHeight: '100vh', padding: '60px 20px', fontFamily: 'Orbitron, sans-serif', color: '#1a1a1a' }}>
+      {/* HEADER SECTION */}
+      <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+        <h1 style={{ 
+          fontSize: '5rem', margin: 0, color: '#c8ffbf', textTransform: 'uppercase',
+          textShadow: '6px 6px 0px #f6b6cf', letterSpacing: '8px', WebkitTextStroke: '2px #1a1a1a'
+        }}>WISHLIST</h1>
+        <p style={{ color: '#f6b6cf', letterSpacing: '4px', fontSize: '0.9rem', marginTop: '10px' }}>
+          VOL. 01 — SPECIAL EDITION CATALOG
+        </p>
+      </div>
 
-      <div style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: 'white', padding: '30px', border: '1px solid #4a7c59', boxShadow: '15px 15px 0px #4a7c59' }}>
-        <h2 style={{ color: '#4a7c59', borderBottom: '1px solid #4a7c59' }}>APPEND TO CATALOG</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginTop: '20px' }}>
-          <input style={{ padding: '10px', border: '1px solid #4a7c59' }} placeholder="ITEM NAME" value={name} onChange={(e) => setName(e.target.value)} />
-          <select style={{ padding: '10px', border: '1px solid #4a7c59' }} value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option value="MY CART">MY CART</option>
-            <option value="MY SHELF">MY SHELF</option>
-          </select>
-          <input style={{ padding: '10px', border: '1px solid #4a7c59' }} placeholder="PRICE" value={price} onChange={(e) => setPrice(e.target.value)} />
-          <input style={{ padding: '10px', border: '1px solid #4a7c59' }} placeholder="IMAGE URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
-          <input style={{ padding: '10px', border: '1px solid #4a7c59', gridColumn: 'span 2' }} placeholder="PRODUCT LINK" value={link} onChange={(e) => setLink(e.target.value)} />
-          <button onClick={addItem} style={{ gridColumn: 'span 2', backgroundColor: '#4a7c59', color: 'white', padding: '15px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>APPEND TO CATALOG</button>
+      {/* MAIN FORM CARD */}
+      <div style={{ position: 'relative', maxWidth: '700px', margin: '0 auto' }}>
+        {/* Pink Shadow Layer */}
+        <div style={{ position: 'absolute', top: '12px', left: '12px', width: '100%', height: '100%', backgroundColor: '#f6b6cf', border: '2px solid #1a1a1a', zIndex: 0 }}></div>
+        
+        {/* Main Mint Card */}
+        <div style={{ position: 'relative', backgroundColor: '#c8ffbf', border: '2px solid #1a1a1a', padding: '40px', zIndex: 1 }}>
+          <h2 style={{ margin: '0 0 25px 0', fontSize: '1.5rem', letterSpacing: '2px' }}>ADD NEW ENTRY:</h2>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <input style={inputStyle} placeholder="ITEM NAME" value={formData.name} onChange={(e)=>setFormData({...formData, name: e.target.value})} />
+            <div style={{ display: 'flex', gap: '10px', gridColumn: 'span 2' }}>
+               <input style={inputStyle} placeholder="PRICE $" value={formData.price} onChange={(e)=>setFormData({...formData, price: e.target.value})} />
+               <input style={inputStyle} placeholder="WHERE TO BUY" value={formData.link} onChange={(e)=>setFormData({...formData, link: e.target.value})} />
+            </div>
+            <input style={{...inputStyle, gridColumn: 'span 2'}} placeholder="WHO TO BUY WITH" value={formData.buyer} onChange={(e)=>setFormData({...formData, buyer: e.target.value})} />
+            
+            <select style={{...inputStyle, gridColumn: 'span 2'}} value={formData.category} onChange={(e)=>setFormData({...formData, category: e.target.value})}>
+              <option value="Beauty">Beauty</option>
+              <option value="Fashion">Fashion</option>
+              <option value="Tech">Tech</option>
+            </select>
+
+            <button onClick={addItem} style={{
+              gridColumn: 'span 2', backgroundColor: '#1a1a1a', color: '#c8ffbf', padding: '20px', 
+              border: 'none', fontWeight: 'bold', fontSize: '1.2rem', cursor: 'pointer', letterSpacing: '3px'
+            }}>APPEND TO CATALOG</button>
+          </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', maxWidth: '1000px', margin: '40px auto' }}>
-        {['MY CART', 'MY SHELF'].map(cat => (
-          <div key={cat}>
-            <h2 style={{ color: '#4a7c59', borderBottom: '2px solid #4a7c59', paddingBottom: '5px' }}>{cat}</h2>
-            {items.filter(i => i.category === cat).map(item => (
-              <div key={item.id} style={{ marginTop: '20px', border: '1px solid #eee', padding: '10px' }}>
-                {item.imageUrl && <img src={item.imageUrl} alt={item.name} style={{ width: '100%', height: '150px', objectFit: 'cover' }} />}
-                <h3 style={{ margin: '10px 0 5px 0' }}>{item.name}</h3>
-                <p style={{ color: '#4a7c59', fontWeight: 'bold' }}>{item.price}</p>
-                {item.link && <a href={item.link} target="_blank" rel="noreferrer" style={{ color: '#4a7c59', fontSize: '0.8rem' }}>VIEW ITEM →</a>}
-              </div>
-            ))}
-          </div>
-        ))}
+      {/* BOTTOM SECTIONS */}
+      <div style={{ maxWidth: '1000px', margin: '80px auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '100px' }}>
+        <div>
+          <h2 style={{ fontSize: '2.5rem', borderBottom: '8px solid #f6b6cf', display: 'inline-block', marginBottom: '30px' }}>MY CART</h2>
+          {items.filter(i => i.category !== 'Shelf').map(item => (
+            <div key={item.id} style={itemRowStyle}>— {item.name.toUpperCase()}</div>
+          ))}
+        </div>
+        <div>
+          <h2 style={{ fontSize: '2.5rem', borderBottom: '8px solid #c8ffbf', display: 'inline-block', marginBottom: '30px' }}>MY SHELF</h2>
+          {items.filter(i => i.category === 'Shelf').map(item => (
+            <div key={item.id} style={itemRowStyle}>— {item.name.toUpperCase()}</div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+
+const inputStyle = {
+  backgroundColor: 'white', border: '2px solid #1a1a1a', padding: '15px', 
+  fontSize: '0.9rem', outline: 'none', width: '100%', boxSizing: 'border-box'
+};
+
+const itemRowStyle = {
+  fontSize: '1.1rem', padding: '10px 0', borderBottom: '1px solid #eee', letterSpacing: '1px'
+};
 
 export default App;
