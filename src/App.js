@@ -78,4 +78,4 @@ function App() {
 
 const inputStyle = { width: '100%', padding: '15px', border: '3px solid #1a1a1a', boxSizing: 'border-box', fontWeight: '700', fontFamily: 'Syne' };
 
-export default App;\
+export default App;
