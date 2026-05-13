@@ -91,6 +91,6 @@ router.post('/items', async (req, res) => {
 });
 
 // Important: Match the prefix you used in React
-app.use('/api', router);
-
+app.use('/', router);
 module.exports.handler = serverless(app);
+
