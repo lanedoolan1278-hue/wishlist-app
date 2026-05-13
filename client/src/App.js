@@ -6,7 +6,6 @@ function App() {
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState({ name: '', price: '', link: '', buyer: '', category: 'Beauty' });
   const API_URL = '/.netlify/functions/server/api/items';
-
   useEffect(() => { fetchItems(); }, []);
   const fetchItems = async () => {
     try {
