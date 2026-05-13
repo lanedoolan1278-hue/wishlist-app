@@ -1,9 +1,9 @@
+const app = express();
 const serverless = require('serverless-http');
 const express = require('express');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const { getStore } = require('@netlify/blobs');
-const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
@@ -61,4 +61,36 @@ app.delete('/api/items/:id', async (req, res) => {
 });
 
 // Delete or comment out: app.listen(5000...)
-module.exports.handler = serverless(app);// Final sync check
+// Final sync check
+const express = require('express');
+const serverless = require('serverless-http');
+const cors = require('cors');
+const { getStore } = require('@netlify/blobs');
+
+const app = express();
+const router = express.Router();
+
+app.use(cors());
+app.use(express.json());
+
+// 1. Route to GET items
+router.get('/items', async (req, res) => {
+  const store = getStore('wishlist');
+  const items = await store.get('items', { type: 'json' }) || [];
+  res.json(items);
+});
+
+// 2. Route to POST (Add) items
+router.post('/items', async (req, res) => {
+  const store = getStore('wishlist');
+  const items = await store.get('items', { type: 'json' }) || [];
+  const newItem = { id: Date.now(), ...req.body };
+  items.push(newItem);
+  await store.setJSON('items', items);
+  res.json(newItem);
+});
+
+// Important: Match the prefix you used in React
+app.use('/api', router);
+
+module.exports.handler = serverless(app);
