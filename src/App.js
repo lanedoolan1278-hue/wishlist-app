@@ -5,7 +5,7 @@ function App() {
   // We are USING 'items' now so the error goes away!
   const [items, setItems] = useState([]);
   const [formData, setFormData] = useState({ name: '', price: '', link: '', buyer: '', category: 'Beauty' });
-  const API_URL = '/.netlify/functions/server/api/items';
+const API_URL = '/.netlify/functions/server/items';
   useEffect(() => { fetchItems(); }, []);
   const fetchItems = async () => {
     try {
