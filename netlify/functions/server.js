@@ -1,3 +1,4 @@
+const serverless = require('serverless-http');
 const express = require('express');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
@@ -59,5 +60,5 @@ app.delete('/api/items/:id', async (req, res) => {
   res.status(204).send();
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-// Final sync check
+// Delete or comment out: app.listen(5000...)
+module.exports.handler = serverless(app);// Final sync check
